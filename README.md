@@ -1,8 +1,8 @@
 ### Faculdade de Informática e Administração Paulista (FIAP)
 ### Pós Graduação em Arquitetura de Software
 ### 8º SOAT - Tech Challenge - 05
-![](https://raw.githubusercontent.com/carlosmuller/shot-it-dashboard/refs/heads/badges/branches.svg)
-![](https://raw.githubusercontent.com/carlosmuller/shot-it-dashboard/refs/heads/badges/jacoco.svg)
+![](https://raw.githubusercontent.com/geggr/shot-it-dashboard/refs/heads/badges/branches.svg)
+![](https://raw.githubusercontent.com/geggr/shot-it-dashboard/refs/heads/badges/jacoco.svg)
 
 ---
 
