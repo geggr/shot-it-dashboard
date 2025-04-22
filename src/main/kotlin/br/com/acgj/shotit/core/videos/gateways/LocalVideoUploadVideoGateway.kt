@@ -35,8 +35,4 @@ class LocalVideoUploadVideoGateway(
 
         return path.toString()
     }
-
-    override suspend fun retrieve(key: String): ByteArrayOutputStream {
-        TODO("Not yet implemented")
-    }
 }

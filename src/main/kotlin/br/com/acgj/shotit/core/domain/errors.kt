@@ -26,7 +26,7 @@ class BadRequestError : RequestError {
         this.error = RequestErrorResponse(message, errors)
     }
 
-    override fun statusCode(): Int = 404
+    override fun statusCode(): Int = 400
     override fun error(): RequestErrorResponse = error
 }
 
@@ -46,6 +46,6 @@ class NotFoundError : RequestError {
         this.error = RequestErrorResponse(message)
     }
 
-    override fun statusCode(): Int = 400
+    override fun statusCode(): Int = 404
     override fun error(): RequestErrorResponse = error
 }

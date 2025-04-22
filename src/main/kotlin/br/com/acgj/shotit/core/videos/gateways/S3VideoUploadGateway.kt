@@ -39,33 +39,4 @@ class S3VideoUploadGateway(
         return fileKey
     }
 
-    override suspend fun retrieve(video: String): ByteArrayOutputStream {
-        return S3Client {
-            region = "us-east-1"
-            endpointUrl = Url.parse("http://localhost:4566")
-            forcePathStyle = true
-            credentialsProvider = StaticCredentialsProvider {
-                accessKeyId = "local"
-                secretAccessKey = "stack"
-            }
-        }.use { s3 ->
-            s3.getObject(
-                GetObjectRequest {
-                    bucket = BUCKET
-                    key = video
-                }
-            ) {
-                content ->
-                val output = ByteArrayOutputStream()
-                content.body?.writeToOutputStream(output)
-
-                output
-            }
-        }
-
-
-
-
-    }
-
 }

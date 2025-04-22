@@ -16,7 +16,7 @@ class ShotitApplicationErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
     fun handleMethodArgumentNotValidException(exception: MethodArgumentNotValidException): ResponseEntity<RequestErrorResponse> {
-        val fields = exception.fieldErrors.map { RequestFieldError(it.field, it.defaultMessage ?: "") }
+        val fields = exception.fieldErrors.map { RequestFieldError(it.field, it.defaultMessage!!) }
         val globals = exception.globalErrors.map { RequestFieldError(it.code ?: "", it.defaultMessage?: "" ) }
         val errors = fields + globals
 

@@ -32,7 +32,4 @@ class UploadVideoServiceImpl(
         }
     }
 
-    override suspend fun retrieve(key: String): ByteArrayOutputStream {
-        return gateway.retrieve(key)
-    }
 }

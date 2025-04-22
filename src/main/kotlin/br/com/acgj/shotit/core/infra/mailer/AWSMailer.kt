@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 @Service
 class AWSMailer(val client: SesClient, @Value("\${aws.ses.sender}") val sourceEmail: String) {
 
-    suspend fun send(user: User, email: EmailTemplate){
+    suspend fun send(user: User, email: EmailTemplate) : String {
         val message = Message {
             subject = Content { data = email.subject }
             body = Body {
@@ -29,6 +29,6 @@ class AWSMailer(val client: SesClient, @Value("\${aws.ses.sender}") val sourceEm
 
         val response = client.sendEmail(request)
 
-        println(response.messageId)
+        return response.messageId
     }
 }

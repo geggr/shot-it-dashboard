@@ -33,7 +33,8 @@ class RetrieveVideoService(
     }
 
     suspend fun downloadThumbnails(id: Long): ByteArray {
-        val video = videoRepository.eagerFindById(id).orElseThrow { NotFoundError("Video not found") }
+        val video = videoRepository.eagerFindById(id).orElseThrow {  NotFoundError("Video not found")}
+        if(video.thumbnails.isNullOrEmpty()) throw NotFoundError("Video without thumbnails");
         return thumbnailDownloadGateway.retrieve(video.thumbnails!!)
     }
 

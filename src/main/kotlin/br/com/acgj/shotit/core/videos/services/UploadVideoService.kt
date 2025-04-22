@@ -5,5 +5,4 @@ import java.io.ByteArrayOutputStream
 
 interface UploadVideoService {
     suspend fun upload(videos: List<Video>)
-    suspend fun retrieve(key: String): ByteArrayOutputStream
 }

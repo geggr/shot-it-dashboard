@@ -42,45 +42,29 @@ class S3AvatarUploadGateway(private val client: S3Client) {
     }
 
     suspend fun retrieve(thumbnails: List<Thumbnail>): ByteArray {
+        if (thumbnails.isEmpty()) {
+            return ByteArray(0)
+        }
 
         val output = ByteArrayOutputStream()
-
-
         ZipOutputStream(output).use { zip ->
-            thumbnails.map { thumbnail ->
-
+            thumbnails.forEach { thumbnail ->
                 val fileKey = thumbnail.url.split("/").last()
-
                 val request = GetObjectRequest {
                     bucket = BUCKET_NAME
                     key = fileKey
                 }
 
                 client.getObject(request) { response ->
-                        val entry = ZipEntry("thumb_${thumbnail.id}.png")
-                        zip.putNextEntry(entry)
-                        zip.write(response.body?.toByteArray())
-                        zip.closeEntry()
-                    }
+                    val content = response.body!!.toByteArray()
+                    val entry = ZipEntry("thumb_${thumbnail.id}.png")
+                    zip.putNextEntry(entry)
+                    zip.write(content)
+                    zip.closeEntry()
                 }
             }
-
-        withContext(Dispatchers.IO) {
-            client.close()
         }
 
-            return output.toByteArray();
-        }
-//
-//
-
-//
-//        val output = client.use {
-//            it.getObject(request) {
-//                content ->
-//                val output = ByteArrayOutputStream()
-//                content.body?.writeToOutputStream(output)
-//                output
-//            } }
-
+        return output.toByteArray()
+    }
 }

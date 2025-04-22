@@ -1,0 +1,84 @@
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: shotit
+      MYSQL_ROOT_PASSWORD: verysecret
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - ./rabbitmq-definitions.json:/etc/rabbitmq/definitions.json
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  localstack:
+    image: localstack/localstack:2.1
+    ports:
+      - "4566:4566"            # LocalStack Edge Proxy
+      - "4510-4559:4510-4559"  # external services port range
+    environment:
+      - SERVICES=s3,ses
+      - DEBUG=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    command: >
+      /bin/bash -c "
+        localstack start &
+        sleep 10 &&
+        awslocal ses verify-email-identity --email no-reply@shotit.com
+      "
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/shotit?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&zeroDateTimeBehavior=convertToNull&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=verysecret
+      - SPRING_QUEUE_HOST=rabbitmq
+      - SPRING_QUEUE_PORT=5672
+      - SPRING_QUEUE_USERNAME=guest
+      - SPRING_QUEUE_PASSWORD=guest
+      - SPRING_AWS_KEY=local
+      - SPRING_AWS_SECRET=stack
+      - SPRING_AWS_REGION=us-east-1
+      - SPRING_AWS_URL=http://localstack:4566
+      - SPRING_JWT_SECRET=S3CR3T
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      localstack:
+        condition: service_started
+    profiles:
+      - app
+
+volumes:
+  mysql_data:
+  rabbitmq_data:

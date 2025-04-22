@@ -20,11 +20,12 @@ class SendFailedVideoMessages(
 
     @Scheduled(cron = "0 */3 * * * *")
     fun handleSendFailedVideoEmail(){
-        logger.info("[${LocalDateTime.now()}]: Sending Failed Video")
+        logger.info("Sending Failed Video")
         repository
             .findAllByStatus(VideoStatus.FAILED)
-            .forEach {
+            .map {
                 runBlocking {
+                    logger.info("Sending Failed Video ${it.id}")
                     mailer.send(
                         user = it.user!!,
                         email = FailedToUploadEmail(it)

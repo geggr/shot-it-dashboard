@@ -4,6 +4,7 @@ plugins {
 	kotlin("plugin.jpa") version "2.1.10"
 	id("org.springframework.boot") version "3.4.2"
 	id("io.spring.dependency-management") version "1.1.7"
+	jacoco
 }
 
 group = "br.com.acgj"
@@ -26,6 +27,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-amqp")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6")
 
 	implementation("com.rabbitmq:amqp-client:5.24.0")
 	implementation("aws.sdk.kotlin:s3:1.4.27")
@@ -39,9 +41,16 @@ dependencies {
 
 	runtimeOnly("com.mysql:mysql-connector-j")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testImplementation("io.mockk:mockk:1.13.17")
+	testImplementation("org.springframework.boot:spring-boot-testcontainers")
+	testImplementation("org.testcontainers:testcontainers")
+	testImplementation("org.testcontainers:localstack")
+	testImplementation("org.testcontainers:rabbitmq")
+	testImplementation("org.testcontainers:junit-jupiter")
+	testImplementation("org.testcontainers:mysql")
+	testImplementation("mysql:mysql-connector-java:8.0.33")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
@@ -59,4 +68,10 @@ allOpen {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.jacocoTestReport {
+	reports {
+		csv.required.set(true)
+	}
 }

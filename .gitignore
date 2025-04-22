@@ -43,3 +43,5 @@ out/
 ### Python ###
 
 scripts/venv
+
+volume/**

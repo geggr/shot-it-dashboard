@@ -28,7 +28,6 @@ class S3ThumbnailGateway(private val client: S3Client) : ThumbnailDownloadGatewa
                     bucket = BUCKET_NAME
                     key = fileKey
                 }
-
                 client.getObject(request) { response ->
                     val entry = ZipEntry("thumb_${thumbnail.id}.png")
                     zip.putNextEntry(entry)
@@ -38,7 +37,6 @@ class S3ThumbnailGateway(private val client: S3Client) : ThumbnailDownloadGatewa
 
             }
         }
-
         return output.toByteArray();
     }
 }

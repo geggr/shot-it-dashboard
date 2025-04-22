@@ -20,7 +20,7 @@ class AuthenticationFilter(
         private const val AUTHORIZATION_PREFIX = "Bearer "
     }
 
-    override fun doFilterInternal(
+    public override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         chain: FilterChain

@@ -1,0 +1,47 @@
+{
+  "exchanges": [
+    {
+      "name": "video.event",
+      "vhost": "/",
+      "type": "topic",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "queues": [
+    {
+      "name": "video.processed",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "video.thumbnail",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "video.event",
+      "vhost": "/",
+      "destination": "video.processed",
+      "destination_type": "queue",
+      "routing_key": "video.upload",
+      "arguments": {}
+    },
+    {
+      "source": "video.event",
+      "vhost": "/",
+      "destination": "video.thumbnail",
+      "destination_type": "queue",
+      "routing_key": "thumbnail.generated",
+      "arguments": {}
+    }
+  ]
+} 
